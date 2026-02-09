@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aagaz 2026 | Official Registration</title>
+    <style>
+        :root { --sci-blue: #00e5ff; --dark-bg: #050a14; }
+        body {
+            background-color: var(--dark-bg);
+            background-image: linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: #e0e0e0; font-family: 'Segoe UI', sans-serif;
+            display: flex; flex-direction: column; align-items: center; padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+            border: 1px solid var(--sci-blue); padding: 30px;
+            width: 100%; max-width: 600px; border-radius: 8px;
+        }
+        h2 { text-align: center; color: var(--sci-blue); letter-spacing: 2px; }
+        .input-group { margin-bottom: 15px; }
+        label { font-size: 11px; color: var(--sci-blue); display: block; margin-bottom: 5px; }
+        input, textarea, select {
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid #333;
+            color: white; padding: 10px; border-radius: 4px; box-sizing: border-box;
+        }
+        .sports-box { 
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px; 
+            padding: 10px; background: rgba(255,255,255,0.02);
+        }
+        button {
+            width: 100%; margin-top: 20px; padding: 15px; background: transparent;
+            color: var(--sci-blue); border: 2px solid var(--sci-blue);
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { background: var(--sci-blue); color: black; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>AAGAZ 2026</h2>
+    <form id="regForm">
+        <div class="input-group">
+            <label>Enrollment Number</label>
+            <input type="text" id="enrollment" required>
+        </div>
+        <div class="input-group">
+            <label>Full Name</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="input-group">
+            <label>Email Address</label>
+            <input type="email" id="email" required>
+        </div>
+        <div class="input-group">
+            <label>Phone Number</label>
+            <input type="tel" id="phone" required>
+        </div>
+        <div class="input-group">
+            <label>Residential Address</label>
+            <textarea id="address" rows="2" required></textarea>
+        </div>
+        
+        <label>Select Sports (Min 1, Max 3)</label>
+        <div class="sports-box">
+            <label><input type="checkbox" name="sport" value="Cricket"> Cricket</label>
+            <label><input type="checkbox" name="sport" value="Football"> Football</label>
+            <label><input type="checkbox" name="sport" value="Volleyball"> Volleyball</label>
+            <label><input type="checkbox" name="sport" value="Badminton"> Badminton</label>
+            <label><input type="checkbox" name="sport" value="Chess"> Chess</label>
+            <label><input type="checkbox" name="sport" value="Carrom"> Carrom</label>
+        </div>
+
+        <button type="submit" id="submitBtn">FINALIZE REGISTRATION</button>
+    </form>
+</div>
+
+<script>
+    // PASTE YOUR GOOGLE WEB APP URL BELOW
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbylu9emidLEKp-K07GZKoOEBAynDfXKBy1iSZymNLArcoQIBBdMBo1PzRDtVZIchwBZ/exec";
+
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        const sports = Array.from(document.querySelectorAll('input[name="sport"]:checked')).map(cb => cb.value);
+
+        if(sports.length === 0 || sports.length > 3) {
+            alert("Please select between 1 and 3 sports.");
+            return;
+        }
+
+        const data = {
+            enrollment: document.getElementById('enrollment').value.trim(),
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            sports: sports.join(", ")
+        };
+
+        btn.innerText = "SENDING TO CENTRAL DATABASE...";
+        btn.disabled = true;
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', 
+            body: JSON.stringify(data)
+        })
+        .then(() => {
+            alert("Success! Enrollment " + data.enrollment + " registered centrally.");
+            document.getElementById('regForm').reset();
+        })
+        .catch(() => alert("Error connecting to central server."))
+        .finally(() => {
+            btn.innerText = "FINALIZE REGISTRATION";
+            btn.disabled = false;
+        });
+    });
+</script>
+</body>
+</html>
